@@ -3,7 +3,7 @@
 #
 
 #------------------------
-# Runtimes for various phases
+# Runtimes
 # WARNING: if you change these you need to re-run 'writeXML.sh'
 pollinterval="1m"            # pollGC.sh interval to check ceph status
 # Runtime (in sec)  
@@ -171,7 +171,7 @@ else
 fi
 
 #------------------------
-# RUNTEST.sh vars
+# Host and logfile vars
 
 # Ceph cluster node IP addresses
 MONhostname="gprfc037"
@@ -181,8 +181,8 @@ RGWhostname="smerf02"
 #cosPATH="/root/0.4.2.c4"
 cosPATH="/root/v0.4.2"
 
-# ceph version: Jewel, Luminous, Nautilus, ...
-CEPHVER=$(ceph --version | awk '{print $(NF-1) }')
+# ceph version (lowercase): Jewel, Luminous, Nautilus, ...
+CEPHVER=$(ceph --version | awk '{print $(NF-1) }' | sed 's/[A-Z]/\L&/g')
 
 # Timestamp logfile
 ts="$(date +%Y%m%d-%H%M%S)"
