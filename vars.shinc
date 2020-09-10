@@ -15,9 +15,9 @@ rgwUSER="johndoe:swift"            # username
 #rgwURL="172.16.0.131:5000"                  # auth_url connection point
 rgwURL="localhost:5000"		# each client will run its own haproxy
 #fillWORKERS=72        # number of workers to use for filling the Cluster
-fillWORKERS=15        # number of workers to use for filling the Cluster
+fillWORKERS=45        # number of workers to use for filling the Cluster
 #runtestWORKERS=192       # number of workers for running delWrite Workload
-runtestWORKERS=15
+runtestWORKERS=45
 #runtestWORKERS=240      # number of workers for running HYBRID Workload
 #runtestWORKERS=120      # DEBUGnumber of workers for running HYBRID Workload
 #
@@ -31,7 +31,7 @@ numCONT=5
 #numOBJ=43397   # for 50% fill
 #numOBJ=3273    # for all SATURATION runs
 #numOBJ=7233     # for delWRITE in BAGL
-numOBJ=500     # for delWRITE in BAGL
+numOBJ=210000     # for 30% fill w/192 OSDs EC4+2 DFG histogram
 # highest object range for WRITE and DELETE operations
 numOBJmax=$(( (numOBJ * 10) ))  # multiply by ten for highest Object Count
 
@@ -149,7 +149,7 @@ pool_list=(".rgw.root" "default.rgw.control" "default.rgw.gc" \
           "default.rgw.buckets.data" "default.rgw.buckets.index" \
           "default.rgw.log" "default.rgw.meta")
 numREPLICAS=3                # how many replicas
-preparePTYPE=rep             # Must be rep OR ec
+preparePTYPE=ec              # Must be rep OR ec
 if [ $preparePTYPE == "rep" ]; then
     REPLICATION="rep"
     k=0
@@ -174,8 +174,8 @@ fi
 # Host and logfile vars
 
 # Ceph cluster node IP addresses
-MONhostname="gprfc037"
-RGWhostname="smerf02"
+MONhostname="f18-h03-000-r620"
+RGWhostname="f22-h01-000-6048r"
 
 # COSbench vars
 #cosPATH="/root/0.4.2.c4"
