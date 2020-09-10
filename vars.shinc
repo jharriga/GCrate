@@ -181,6 +181,9 @@ RGWhostname="smerf02"
 #cosPATH="/root/0.4.2.c4"
 cosPATH="/root/v0.4.2"
 
+# ceph version: Jewel, Luminous, Nautilus, ...
+CEPHVER=$(ceph --version | awk '{print $(NF-1) }')
+
 # Timestamp logfile
 ts="$(date +%Y%m%d-%H%M%S)"
 
