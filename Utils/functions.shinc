@@ -52,6 +52,33 @@ function get_time() {
   date |awk '{print $2$3"."$4}'
 }
 
+# collection of 'get_' routines used by POLL.sh
+function get_rawUsed() {
+# NOTE: parse 'ceph df' fields based on ceph version
+  case $cephver in
+  luminous)
+    rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
+    ;;
+  nautilus)
+    rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $10}'`
+    ;;
+  *)
+    updatelog "unable to gather %RAW USED stats, exit..." $log
+    exit
+    ;;
+  esac  
+}
+
+function get_pendingGC() {
+  # get this stat when running RHCS 3.x builds or later
+  if echo $CEPH_VERSION | grep -q "10.2." ; then
+      # Skip get_pendingGC for 2.5 versions
+      pendingGC="N/A"
+  else
+      pendingGC=`radosgw-admin gc list --include-all | wc -l`
+  fi
+}
+
 
 #
 # END FUNCTIONS
