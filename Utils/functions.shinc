@@ -7,31 +7,6 @@ function updatelog {
     echo `$DATE`": $1" 2>&1 | tee -a $logfn
 }
 
-function print_Runtime {
-  logfile=$1
-
-  echo "Runtime Environment:" | tee -a $logfile
-  echo -n "> "; uname -a | tee -a $logfile
-  if [ -f /etc/redhat-release ]; then
-    echo -n "> "; cat /etc/redhat-release | tee -a $logfile
-  fi
-  echo -n "> "; ceph --version | tee -a $logfile
-
-# Write key variable values to LOGFILE
-  echo "Key Variable Values:" | tee -a $logfile
-  updatelog "> jobtime=${jobtime}" $logfile
-  updatelog "> failuretime=${failuretime}" $logfile
-  updatelog "> recoverytime=${recoverytime}" $logfile
-  updatelog "> polltime=${polltime}" $logfile
-  echo "Cluster variable settings:" | tee -a $logfile
-  updatelog "> OSDnode=${OSDnode}" $logfile
-  updatelog "> MONnode=${MONnode}" $logfile
-  echo "COSbench variable settings:" | tee -a $logfile
-  updatelog "> XMLfill=${XMLfill}" $logfile
-  updatelog "> XMLworkload=${XMLworkload}" $logfile
-  updatelog "---------------------------------" $logfile
-}
-
 function error_exit {
 # Function for exit due to fatal program error
 # Accepts 1 argument:
