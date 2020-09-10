@@ -24,24 +24,47 @@ source "$myPath/../Utils/functions.shinc"
 interval=$1          # how long to sleep between polling
 log=$2               # the logfile to write to
 DATE='date +%Y/%m/%d:%H:%M:%S'
+threshold="85.0"     # percent fill before exit - ceph df
 
 # update log file with ceph %RAW USED 
-updatelog "** POLLGC started" $log
-rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
+updatelog "** POLLGC started with threshold = ${threshold}%" $log
+
+case $cephver in
+luminous)
+  rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
+  ;;
+nautilus)
+  rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $10}'`
+  ;;
+*)
+  updatelog "unable to gather %RAW USED stats, exit..." $log
+  exit
+  ;;
+esac  
 pendingGC=`radosgw-admin gc list --include-all | wc -l`
 updatelog "%RAW USED ${rawUsed}; Pending GCs ${pendingGC}" $log
-threshold="75.0"
 
-# wait till cluster reaches 75% fill mark
+# wait till cluster reaches '$threshold' fill mark
 while (( $(awk 'BEGIN {print ("'$rawUsed'" < "'$threshold'")}') )); do
-#while $rawUsed < 75; do
     sleep "${interval}"
     # Record the %RAW USED and pending GC count
     rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
+    case $cephver in
+    luminous)
+      rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
+      ;;
+    nautilus)
+      rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $10}'`
+      ;;
+    *)
+      updatelog "unable to gather %RAW USED stats, exit..." $log
+      exit
+      ;;
+    esac
     pendingGC=`radosgw-admin gc list --include-all | wc -l`
     updatelog "%RAW USED ${rawUsed}; Pending GCs ${pendingGC}" $log
 done
 
-updatelog "** 75% fill mark hit: POLLGC ending" $log
+updatelog "** ${threshold}% fill mark hit: POLLGC ending" $log
 
 #echo " " | mail -s "POLLGC fill mark hit - terminated" user@company.net
