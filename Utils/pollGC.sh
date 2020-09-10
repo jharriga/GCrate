@@ -29,39 +29,17 @@ threshold="85.0"     # percent fill before exit - ceph df
 # update log file with ceph %RAW USED 
 updatelog "** POLLGC started with threshold = ${threshold}%" $log
 
-case $cephver in
-luminous)
-  rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
-  ;;
-nautilus)
-  rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $10}'`
-  ;;
-*)
-  updatelog "unable to gather %RAW USED stats, exit..." $log
-  exit
-  ;;
-esac  
-pendingGC=`radosgw-admin gc list --include-all | wc -l`
+# Record the %RAW USED and pending GC count
+get_rawUsed
+get_pendingGC
 updatelog "%RAW USED ${rawUsed}; Pending GCs ${pendingGC}" $log
 
 # wait till cluster reaches '$threshold' fill mark
 while (( $(awk 'BEGIN {print ("'$rawUsed'" < "'$threshold'")}') )); do
     sleep "${interval}"
     # Record the %RAW USED and pending GC count
-    rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
-    case $cephver in
-    luminous)
-      rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
-      ;;
-    nautilus)
-      rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $10}'`
-      ;;
-    *)
-      updatelog "unable to gather %RAW USED stats, exit..." $log
-      exit
-      ;;
-    esac
-    pendingGC=`radosgw-admin gc list --include-all | wc -l`
+    get_rawUsed
+    get_pendingGC
     updatelog "%RAW USED ${rawUsed}; Pending GCs ${pendingGC}" $log
 done
 
