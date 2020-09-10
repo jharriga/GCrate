@@ -56,17 +56,17 @@ function get_time() {
 function get_rawUsed() {
 # NOTE: parse 'ceph df' fields based on ceph version
   case $CEPHVER in
-  luminous)
-    rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
-    ;;
-  nautilus)
-    rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $10}'`
-    ;;
-  *)
-    updatelog "unable to gather %RAW USED stats, exit..." $log
-    exit
-    ;;
-  esac  
+  
+    luminous)
+      rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
+      ;;
+    nautilus)
+      rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $10}'`
+      ;;
+    *)
+      error_exit "unable to gather %RAW USED stats, exit..."
+      ;;
+    esac  
 }
 
 function get_pendingGC() {
