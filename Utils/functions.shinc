@@ -55,7 +55,7 @@ function get_time() {
 # collection of 'get_' routines used by POLL.sh
 function get_rawUsed() {
 # NOTE: parse 'ceph df' fields based on ceph version
-  case $cephver in
+  case $CEPHVER in
   luminous)
     rawUsed=`ceph df | head -n 3 | tail -n 1 | awk '{print $4}'`
     ;;
@@ -71,7 +71,7 @@ function get_rawUsed() {
 
 function get_pendingGC() {
   # get this stat when running RHCS 3.x builds or later
-  if echo $CEPH_VERSION | grep -q "10.2." ; then
+  if echo $CEPHVER | grep -q "jewel" ; then
       # Skip get_pendingGC for 2.5 versions
       pendingGC="N/A"
   else
