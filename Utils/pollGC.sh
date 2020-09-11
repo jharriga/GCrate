@@ -37,17 +37,17 @@ updatelog "%RAW USED ${rawUsed}; Pending GCs ${pendingGC}" $log
 # wait till cluster reaches '$threshold' fill mark
 while (( $(awk 'BEGIN {print ("'$rawUsed'" < "'$threshold'")}') )); do
     # RGW system Load Average
-    echo -n "LA: " >> $log        # prefix line with stats label
+    echo -n "LA: " | tee -a $log        # prefix line with stats label
     get_upTime
     updatelog "${RGWhost} ${upTime}" $log
 
     # RGW radosgw PROCESS and MEM stats
-    echo -n "RGW: " >> $log        # prefix line with stats label`
+    echo -n "RGW: " | tee -a $log        # prefix line with stats label
     get_rgwMem
     updatelog "${RGWhostname} ${rgwMem}" $log
 
     # ceph-osd PROCESS and MEM stats
-    echo -n "OSD: " >> $log        # prefix line with stats label
+    echo -n "OSD: " | tee -a $log        # prefix line with stats label
     get_osdMem
     updatelog "${RGWhostname} ${osdMem}" $log
 
