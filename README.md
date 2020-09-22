@@ -13,6 +13,7 @@ All scripts create logfiles in RESULTS directory
 - runIOworkload.sh  invokes ioWorkload.xml
 - copyPasswd.sh     inserts the RGW password into the three XML workload files
 - Utils/pollGC.sh   called by runIOworkload.sh to periodically report stats
+- cleanup.sh        recursively removes buckets and issues RGW garbage collection activty
 
 NOTE: host IPaddresses and ceph login credentials in vars.shinc will need to be replaced for your cluster
 
