@@ -39,7 +39,7 @@ while (( $(awk 'BEGIN {print ("'$rawUsed'" < "'$threshold'")}') )); do
     # RGW system Load Average
     echo -n "LA: " | tee -a $log        # prefix line with stats label
     get_upTime
-    updatelog "${RGWhost} ${upTime}" $log
+    updatelog "${RGWhostname} ${upTime}" $log
 
     # RGW radosgw PROCESS and MEM stats
     echo -n "RGW: " | tee -a $log        # prefix line with stats label
