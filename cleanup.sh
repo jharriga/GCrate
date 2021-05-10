@@ -30,9 +30,9 @@ s3cmd rb s3://mycontainers5 -c s3test.cfg --recursive || {
 }
 
 # Process GCs
-radosgw-admin gc process gc --include-all &
-radosgw-admin gc process gc --include-all &
-radosgw-admin gc process gc --include-all &
+radosgw-admin gc process --include-all &
+radosgw-admin gc process --include-all &
+radosgw-admin gc process --include-all &
 
 # Wait for all GCs to be processed, none PENDING
 Utils/completedGC.sh 5m /tmp/hold
